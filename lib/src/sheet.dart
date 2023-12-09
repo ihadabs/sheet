@@ -1,6 +1,7 @@
 // ignore_for_file: always_put_control_body_on_new_line
 
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sheet/src/widgets/resizable_sheet.dart';
@@ -33,8 +34,7 @@ enum SheetFit {
   expand,
 }
 
-typedef SheetDecorationBuilder = Widget Function(
-    BuildContext context, Widget child);
+typedef SheetDecorationBuilder = Widget Function(BuildContext context, Widget child);
 
 /// A material design bottom sheet.
 ///
@@ -226,15 +226,11 @@ class Sheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final SheetDecorationBuilder decorationBuilder = this.decorationBuilder ??
         (BuildContext context, Widget child) {
-          final BottomSheetThemeData bottomSheetTheme =
-              Theme.of(context).bottomSheetTheme;
-          final Color? color =
-              backgroundColor ?? bottomSheetTheme.backgroundColor;
-          final double elevation =
-              this.elevation ?? bottomSheetTheme.elevation ?? 0;
+          final BottomSheetThemeData bottomSheetTheme = Theme.of(context).bottomSheetTheme;
+          final Color? color = backgroundColor ?? bottomSheetTheme.backgroundColor;
+          final double elevation = this.elevation ?? bottomSheetTheme.elevation ?? 0;
           final ShapeBorder? shape = this.shape ?? bottomSheetTheme.shape;
-          final Clip clipBehavior =
-              this.clipBehavior ?? bottomSheetTheme.clipBehavior ?? Clip.none;
+          final Clip clipBehavior = this.clipBehavior ?? bottomSheetTheme.clipBehavior ?? Clip.none;
 
           return Material(
             color: color,
@@ -244,10 +240,8 @@ class Sheet extends StatelessWidget {
             child: child,
           );
         };
-    final SheetController? effectiveController =
-        controller ?? DefaultSheetController.of(context);
-    final double? initialExtent =
-        this.initialExtent?.clamp(minExtent ?? 0, maxExtent ?? double.infinity);
+    final SheetController? effectiveController = controller ?? DefaultSheetController.of(context);
+    final double? initialExtent = this.initialExtent?.clamp(minExtent ?? 0, maxExtent ?? double.infinity);
     return SheetScrollable(
       initialExtent: initialExtent,
       minInteractionExtent: minInteractionExtent,
@@ -291,8 +285,7 @@ class Sheet extends StatelessWidget {
 }
 
 class _DefaultSheetScrollController extends StatelessWidget {
-  const _DefaultSheetScrollController({Key? key, required this.child})
-      : super(key: key);
+  const _DefaultSheetScrollController({Key? key, required this.child}) : super(key: key);
 
   final Widget child;
 
@@ -367,8 +360,7 @@ class SheetController extends ScrollController {
     ScrollContext context,
     ScrollPosition? oldPosition,
   ) {
-    final double? initialPixels =
-        (context is SheetContext) ? context.initialExtent : null;
+    final double? initialPixels = (context is SheetContext) ? context.initialExtent : null;
     return SheetPosition(
       physics: physics,
       context: context as SheetContext,
@@ -377,20 +369,16 @@ class SheetController extends ScrollController {
     );
   }
 
-  Future<void> relativeAnimateTo(double offset,
-      {required Duration duration, required Curve curve}) async {
-    assert(positions.isNotEmpty,
-        'ScrollController not attached to any scroll views.');
+  Future<void> relativeAnimateTo(double offset, {required Duration duration, required Curve curve}) async {
+    assert(positions.isNotEmpty, 'ScrollController not attached to any scroll views.');
     await Future.wait<void>(<Future<void>>[
       for (final ScrollPosition position in positions)
-        (position as SheetPosition)
-            .relativeAnimateTo(offset, duration: duration, curve: curve),
+        (position as SheetPosition).relativeAnimateTo(offset, duration: duration, curve: curve),
     ]);
   }
 
   void relativeJumpTo(double offset) {
-    assert(positions.isNotEmpty,
-        'ScrollController not attached to any scroll views.');
+    assert(positions.isNotEmpty, 'ScrollController not attached to any scroll views.');
     for (final ScrollPosition position in positions) {
       (position as SheetPosition).relativeJumpTo(offset);
     }
@@ -431,8 +419,7 @@ class SheetPosition extends ScrollPositionWithSingleContext {
 
   SheetPrimaryScrollController get scrollController => _scrollController;
 
-  Future<void> relativeAnimateTo(double to,
-      {required Duration duration, required Curve curve}) {
+  Future<void> relativeAnimateTo(double to, {required Duration duration, required Curve curve}) {
     assert(to >= 0 && to <= 1);
     return super.animateTo(
       pixelsFromRelativeOffset(to, minScrollExtent, maxScrollExtent),
@@ -442,16 +429,13 @@ class SheetPosition extends ScrollPositionWithSingleContext {
   }
 
   @override
-  Future<void> animateTo(double to,
-      {required Duration duration, required Curve curve}) {
-    return super.animateTo(to.clamp(minScrollExtent, maxScrollExtent),
-        duration: duration, curve: curve);
+  Future<void> animateTo(double to, {required Duration duration, required Curve curve}) {
+    return super.animateTo(to.clamp(minScrollExtent, maxScrollExtent), duration: duration, curve: curve);
   }
 
   void relativeJumpTo(double to) {
     assert(to >= 0 && to <= 1);
-    final value =
-        pixelsFromRelativeOffset(to, minScrollExtent, maxScrollExtent);
+    final value = pixelsFromRelativeOffset(to, minScrollExtent, maxScrollExtent);
     return super.jumpTo(value);
   }
 
@@ -471,8 +455,7 @@ class SheetPosition extends ScrollPositionWithSingleContext {
     _preventingDrag = false;
   }
 
-  late final AnimationController _controller =
-      AnimationController(vsync: context.vsync);
+  late final AnimationController _controller = AnimationController(vsync: context.vsync);
 
   Animation<double> get animation => _controller;
 
@@ -523,9 +506,7 @@ class SheetPosition extends ScrollPositionWithSingleContext {
     double maxScrollExtent,
   ) {
     if (minScrollExtent == maxScrollExtent) return 1;
-    final value =
-        ((pixels - minScrollExtent) / (maxScrollExtent - minScrollExtent))
-            .clamp(0.0, 1.0);
+    final value = ((pixels - minScrollExtent) / (maxScrollExtent - minScrollExtent)).clamp(0.0, 1.0);
     return value;
   }
 
@@ -570,8 +551,7 @@ class SheetViewport extends SingleChildRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(
-      BuildContext context, RenderSheetViewport renderObject) {
+  void updateRenderObject(BuildContext context, RenderSheetViewport renderObject) {
     // Order dependency: The offset setter reads the axis direction.
     renderObject
       ..axisDirection = axisDirection
@@ -795,8 +775,7 @@ class RenderSheetViewport extends RenderBox
       double minHeight = expand ? maxHeight : 0;
 
       if (isOverflow) {
-        final double overflowHeight =
-            _childExtentBeforeOverflow! + offset.pixels;
+        final double overflowHeight = _childExtentBeforeOverflow! + offset.pixels;
         maxHeight = overflowHeight;
         minHeight = overflowHeight;
       }
@@ -863,8 +842,7 @@ class RenderSheetViewport extends RenderBox
     }
   }
 
-  final LayerHandle<ClipRectLayer> _clipRectLayer =
-      LayerHandle<ClipRectLayer>();
+  final LayerHandle<ClipRectLayer> _clipRectLayer = LayerHandle<ClipRectLayer>();
 
   @override
   void dispose() {
@@ -902,8 +880,7 @@ class RenderSheetViewport extends RenderBox
   }
 
   @override
-  RevealedOffset getOffsetToReveal(RenderObject target, double alignment,
-      {Rect? rect}) {
+  RevealedOffset getOffsetToReveal(RenderObject target, double alignment, {Rect? rect, Axis? axis}) {
     rect ??= target.paintBounds;
     if (target is! RenderBox) {
       return RevealedOffset(offset: offset.pixels, rect: rect);
@@ -941,8 +918,7 @@ class RenderSheetViewport extends RenderBox
         break;
     }
 
-    final double targetOffset = leadingScrollOffset -
-        (mainAxisExtent - targetMainAxisExtent) * alignment;
+    final double targetOffset = leadingScrollOffset - (mainAxisExtent - targetMainAxisExtent) * alignment;
     final Rect targetRect = bounds.shift(_paintOffsetForPosition(targetOffset));
     return RevealedOffset(offset: targetOffset, rect: targetRect);
   }
